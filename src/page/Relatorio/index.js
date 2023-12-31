@@ -1,25 +1,25 @@
 import { useNavigate } from "../../lib/@prix.js";
 
-export default function ({ tagPage }) {
-  const lancamentos = JSON.parse(localStorage.getItem('lancamentos')) || [];
+export default function ({ tagPage, Data }) {
+  const lancamentos = Data || JSON.parse(localStorage.getItem('lancamentos')) || [];
 
 
   const valorTotalReceitasObj = lancamentos
-  .filter(lancamento => lancamento.tipoLancamento === "receita")
+  .filter(lancamento => lancamento.TIPO === "receita")
 
 const valorTotalDespesasObj = lancamentos
-  .filter(lancamento => lancamento.tipoLancamento === "despesa")
+  .filter(lancamento => lancamento.TIPO === "despesa")
 
 
 // Soma dos valores das receitas
 const valorTotalReceitas = valorTotalReceitasObj.reduce(
-  (acumulador, receita) => acumulador + parseFloat(receita.valor),
+  (acumulador, receita) => acumulador + parseFloat(receita.VALOR),
   0
 );
 
 // Soma dos valores das despesas
 const valorTotalDespesas = valorTotalDespesasObj.reduce(
-  (acumulador, despesa) => acumulador + parseFloat(despesa.valor),
+  (acumulador, despesa) => acumulador + parseFloat(despesa.VALOR),
   0
 );
 
@@ -29,11 +29,12 @@ const diferenca = valorTotalReceitas - valorTotalDespesas;
 
 tagPage.addEventListener("click", e=>{
 if(e.target.tagName === "BUTTON"){
-  lancamentos.splice(e.target.id, 1);
-  localStorage.setItem('lancamentos', JSON.stringify(lancamentos));
+  //lancamentos.splice(e.target.id, 1);
+  //localStorage.setItem('lancamentos', JSON.stringify(lancamentos));
+  alert("Não pode deletar")
 }
 
-useNavigate("/#/relatorio/");
+//useNavigate("/#/relatorio/");
 })
 
 
@@ -50,7 +51,7 @@ useNavigate("/#/relatorio/");
                  </div>
 
                  <div class="comp-relatorios">                           
-                   ${lancamentos.map((receita, key) => `<div> <h5 style="${receita.tipoLancamento === 'receita' ? 'color: green' : 'color: red'}" >${receita.descricao} ${receita.valor} reais</h5>   <button id=" ${key} "></button> </div>`).join('')}
+                   ${lancamentos.map((receita, key) => `<div> <h5 style="${receita.LACAMENTO === 'receita' ? 'color: green' : 'color: red'}" >${receita.DESCRICAO} ${receita.VALOR} reais</h5>   <button id=" ${key} "></button> </div>`).join('')}
                 </div> 
                 </div>
                                     

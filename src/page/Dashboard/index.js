@@ -1,23 +1,23 @@
-export default function Dashboard({ tagPage }) {
-  const lancamentos = JSON.parse(localStorage.getItem('lancamentos')) || [];
+export default function Dashboard({ tagPage, Data}) {
+  const lancamentos =  Data || JSON.parse(localStorage.getItem('lancamentos')) || [];
 
 
   const valorTotalReceitasObj = lancamentos
-  .filter(lancamento => lancamento.tipoLancamento === "receita")
+  .filter(lancamento => lancamento.TIPO === "receita")
 
 const valorTotalDespesasObj = lancamentos
-  .filter(lancamento => lancamento.tipoLancamento === "despesa")
+  .filter(lancamento => lancamento.TIPO === "despesa")
 
 
 // Soma dos valores das receitas
 const valorTotalReceitas = valorTotalReceitasObj.reduce(
-  (acumulador, receita) => acumulador + parseFloat(receita.valor),
+  (acumulador, receita) => acumulador + parseFloat(receita.VALOR),
   0
 );
 
 // Soma dos valores das despesas
 const valorTotalDespesas = valorTotalDespesasObj.reduce(
-  (acumulador, despesa) => acumulador + parseFloat(despesa.valor),
+  (acumulador, despesa) => acumulador + parseFloat(despesa.VALOR),
   0
 );
 
