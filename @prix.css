@@ -1,0 +1,184 @@
+#app{
+   display: flex;
+   justify-content: center;
+   align-items: center;
+  
+}
+
+.container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+
+
+}
+
+.container_corpo{
+    position: relative;
+    top: -80px;
+    width: 340px;
+    height: 550px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 10px;
+    padding: 10px;
+
+}
+
+.container_comp_menu{
+    position: fixed;
+    top: 90%;
+  
+}
+
+.comp_menu{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 40px
+}
+
+.das-card{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    width: 300px;
+    height: 120px;
+    color: #fff;
+    font-size: 12px;
+    border-radius: 10px;
+
+ 
+}
+
+.das-card div{
+  width: 90%;
+   display: flex;
+   justify-content: center;
+   align-items: center; 
+   gap: 20px;
+  
+}
+
+.das-card div h4{
+  background: #858585b6;
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.das-card div h5{
+  background: #afafaf5e;
+  padding: 10px;
+  border-radius: 5px;
+  
+}
+
+
+.comp-relatorios{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  overflow: auto;
+
+
+}
+
+.comp-relatorios h5{
+  width: 50px;
+  background: #b8b8b849;
+  padding: 10px;
+  border-radius: 5px;
+  
+}
+
+.comp-relatorios div{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px
+
+}
+
+.comp-relatorios div button{
+    width: 10px;
+    height: 10px;
+    background: red;
+    padding: 10px;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#formLancamento{
+    width: 350px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  input, select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 16px;
+    border-radius: 4px;
+    box-sizing: border-box;
+  }
+
+  button {
+    width: 100%;
+    background-color: #4CAF50;
+    color: white;
+    padding: 15px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background-color: #45a049;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+
+  th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #4CAF50;
+    color: white;
+  }
+

@@ -1,0 +1,3 @@
+{
+  "ola": "document.querySelector('[data-select]').innerText = '<Oliveira'"
+}

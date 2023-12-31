@@ -1,0 +1,3 @@
+{
+  "compSer": " document.querySelector('[ data-select-compo]').innerHTML = '<div>Alifer</div>' "
+}
