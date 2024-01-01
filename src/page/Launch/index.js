@@ -56,8 +56,7 @@ export default function Launch({ tagPage }) {
 
           <div class="container">          
 
-            <form id="formLancamento">
-              
+            <form id="formLancamento">              
             <h3>F-bolso</h3>    
             <h2>Formulário de Receitas e Despesas</h2>
               <label for="tipoLancamento">Tipo de Lançamento:</label>

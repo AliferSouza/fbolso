@@ -8,7 +8,7 @@ import api from "./api.js"
 
 async function main() {
     const Data = await api()
-    useNavigate("/relatorio/", { Pages, Components, Data, Config });
+    useNavigate("/dashboard/", { Pages, Components, Data, Config });
 }
 main()
 

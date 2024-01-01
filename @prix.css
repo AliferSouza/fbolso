@@ -31,8 +31,13 @@
 }
 
 .container_comp_menu{
+    width: 250px;
     position: fixed;
     top: 90%;
+    background: #858585;
+    padding: 10px;
+    border-radius: 20px;
+   
   
 }
 
@@ -46,7 +51,11 @@
 
 .comp_menu svg {
   cursor: pointer;
+ 
 }
+
+
+
 
 .das-card{
     display: flex;
@@ -150,7 +159,7 @@
 
 
 #formLancamento{
-    width: 350px;
+    width: 300px;
 }
 
 label {

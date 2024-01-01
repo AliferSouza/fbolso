@@ -2,7 +2,7 @@ import config from "../@prix_config.js";
 
 const CACHE_KEY = 'cachedData';
 const CACHE_TIME_KEY = 'cacheTimestamp';
-const CACHE_EXPIRY_TIME = 2 * 60 * 1000; // 2 minutes in milliseconds
+const CACHE_EXPIRY_TIME = 1 * 60 * 1000; // 2 minutes in milliseconds
 
 export default async function API() {
   try {
