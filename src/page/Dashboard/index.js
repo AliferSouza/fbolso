@@ -1,45 +1,32 @@
-export default function Dashboard({ tagPage, Data}) {
-  const lancamentos =  Data || JSON.parse(localStorage.getItem('lancamentos')) || [];
+export default function Dashboard({ tagPage, Data }) {
+  const lancamentos = Data || JSON.parse(localStorage.getItem('lancamentos')) || [];
 
+  const resultado = lancamentos.reduce((total, lancamento) => {
+    const valor = parseFloat(lancamento.VALOR);
+    if (lancamento.TIPO === "receita") {
+      total.valorTotalReceitas += valor;
+    } else if (lancamento.TIPO === "despesa") {
+      total.valorTotalDespesas += valor;
+    }
+    return total;
+  }, { valorTotalReceitas: 0, valorTotalDespesas: 0 });
 
-  const valorTotalReceitasObj = lancamentos
-  .filter(lancamento => lancamento.TIPO === "receita")
+  const { valorTotalReceitas, valorTotalDespesas } = resultado;
 
-const valorTotalDespesasObj = lancamentos
-  .filter(lancamento => lancamento.TIPO === "despesa")
-
-
-// Soma dos valores das receitas
-const valorTotalReceitas = valorTotalReceitasObj.reduce(
-  (acumulador, receita) => acumulador + parseFloat(receita.VALOR),
-  0
-);
-
-// Soma dos valores das despesas
-const valorTotalDespesas = valorTotalDespesasObj.reduce(
-  (acumulador, despesa) => acumulador + parseFloat(despesa.VALOR),
-  0
-);
-
-// Diferença entre receitas e despesas
-const diferenca = valorTotalReceitas - valorTotalDespesas;
+  const diferenca = valorTotalReceitas - valorTotalDespesas;
 
 
 
-  return `
-   
-    
-       
+  return `        
                 <div class="container">
-
-            
+           
 
                   <h3>F-bolso</h3>                        
                   <h1>Dashboard</h1>
-                  ${diferenca > 0  ? `<h2 style="color: green">R$ ${diferenca.toFixed(2)}</h2>` : `<h2 style="color: red">R$ -${Math.abs(diferenca).toFixed(2)}`}</h2>
+                  ${diferenca > 0 ? `<h2 style="color: green">R$ ${diferenca.toFixed(2)}</h2>` : `<h2 style="color: red">R$ -${Math.abs(diferenca).toFixed(2)}`}</h2>
                    <div class="container_corpo">           
                  
-                  <comp-dashboard-card style="background:#A100FFFF" class="das-card"  id="Laçamentos"></comp-dashboard-card>
+                  <comp-dashboard-card style="background:#A100FFFF" class="das-card"  id="lacamentos"></comp-dashboard-card>
                   <comp-dashboard-card style="background:#279260"  class="das-card " id="receita"></comp-dashboard-card>
                   <comp-dashboard-card style="background:#000000" class="das-card" id="despesa"></comp-dashboard-card>
                   </div>

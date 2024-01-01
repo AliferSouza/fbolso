@@ -41,6 +41,11 @@
     justify-content: space-between;
     align-items: center;
     gap: 40px
+    
+}
+
+.comp_menu svg {
+  cursor: pointer;
 }
 
 .das-card{
@@ -53,6 +58,7 @@
     color: #fff;
     font-size: 12px;
     border-radius: 10px;
+    cursor: pointer;
 
  
 }
@@ -72,6 +78,7 @@
   border-radius: 5px;
 }
 
+
 .das-card div h5{
   background: #afafaf5e;
   padding: 10px;
@@ -80,31 +87,38 @@
 }
 
 
+
+
+.container_relatorio {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  width: 350px;
+  height: 800px;
+}
+
 .comp-relatorios{
+  width: 98%;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   overflow: auto;
-
-
-}
-
-.comp-relatorios h5{
-  width: 50px;
-  background: #b8b8b849;
-  padding: 10px;
+  gap: 5px;
   border-radius: 5px;
-  
-}
 
+}
 .comp-relatorios div{
+  width: 80%;
   display: flex;
-  justify-content: center;
+  justify-content:space-between;
+  padding: 10px;
   align-items: center;
-  gap: 5px
-
+  align-items: center;
+  background: #ddd;
 }
+
 
 .comp-relatorios div button{
     width: 10px;
@@ -113,6 +127,7 @@
     padding: 10px;
 
 }
+
 
 
 

@@ -1,4 +1,4 @@
-import config from "./config.js";
+import config from "../@prix_config.js";
 
 const CACHE_KEY = 'cachedData';
 const CACHE_TIME_KEY = 'cacheTimestamp';
@@ -28,7 +28,6 @@ export default async function API() {
     localStorage.setItem(CACHE_KEY, JSON.stringify(data));
     localStorage.setItem(CACHE_TIME_KEY, Date.now().toString());
 
-    console.log('Data received:', data);
 
     return data;
   } catch (error) {

@@ -7,7 +7,6 @@ import relatorio from "./Relatorio/index.js";
 export default {
     dashboard,
     launch,
-    relatorio,
-       
+    relatorio,       
  
 }

@@ -1,26 +1,41 @@
-export default function compDashboardCard({tag, Data}) {
-   const lancamentos = Data || JSON.parse(localStorage.getItem('lancamentos')) || [] 
+import { useNavigate } from "../../lib/@prix.js"
+
+export default function compDashboardCard({ tag, Data }) {
+   const validar = tag.id
+   const lancamentos = Data || JSON.parse(localStorage.getItem('lancamentos')) || []
    const ultimosTresLancamentos = lancamentos.slice(-3);
 
-   console.log(ultimosTresLancamentos)
+   const valorPReceitas = ultimosTresLancamentos
+      .filter(lancamento => lancamento.TIPO === "receita")
+   const valorPDespesas = ultimosTresLancamentos
+      .filter(lancamento => lancamento.TIPO === "despesa")
 
-   const validar = tag.id
-
-   const valorPReceitas= ultimosTresLancamentos
-   .filter(lancamento => lancamento.TIPO === "receita")
- 
-  const valorPDespesas= ultimosTresLancamentos
-   .filter(lancamento => lancamento.TIPO === "despesa")
-
-   // Criação do objeto usando propagação (spread)
+  
    const valorLancamento = {
-   ...valorPReceitas.reduce((acc, receita, index) => ({ ...acc, [`receita${index + 1}`]: receita }), {}),
-   ...valorPDespesas.reduce((acc, despesa, index) => ({ ...acc, [`despesa${index + 1}`]: despesa }), {})
+      ...valorPReceitas.reduce((acc, receita, index) => ({ ...acc, [`receita${index + 1}`]: receita }), {}),
+      ...valorPDespesas.reduce((acc, despesa, index) => ({ ...acc, [`despesa${index + 1}`]: despesa }), {})
    };
 
+   const valorTotalReceitas = lancamentos.filter(lancamento => lancamento.TIPO === validar)
+      .reduce((acumulador, receita) => {
+         return acumulador + parseFloat(receita.VALOR);
+      }, 0);
 
 
-   if(validar === "Laçamentos"){
+   const valorTotalReceitasObj = lancamentos
+      .filter(lancamento => lancamento.TIPO === validar).slice(0, 3);
+
+
+      tag.addEventListener("click", e =>{           
+            if(tag.tagName === "COMP-DASHBOARD-CARD"){             
+              useNavigate(`/relatorio/${validar}`)
+            }
+               
+          
+      })
+
+
+   if (validar === "lacamentos") {
       return `
   
          <h4> ${tag.id.toUpperCase()}</h4>     
@@ -31,23 +46,14 @@ export default function compDashboardCard({tag, Data}) {
      `
    }
 
-   const valorTotalReceitas = lancamentos
-   .filter(lancamento => lancamento.TIPO === validar)
-   .reduce((acumulador, receita) => {
-       return acumulador + parseFloat(receita.VALOR);   }, 0);
 
-
-
-   const valorTotalReceitasObj = lancamentos
-   .filter(lancamento => lancamento.TIPO === validar).slice(0, 3);
-    
-      return `
+   return `
          <h4> ${tag.id.toUpperCase()}: R$ ${valorTotalReceitas.toFixed(2)} Reais</h4>   
         
             <div>       
             ${valorTotalReceitasObj.map(receita => `<h5>${receita.DESCRICAO.slice(0, 5)} ${receita.VALOR} reais</h5>`).join('')}
     
-            <h1> ${tag.id  === "receita"  ? `⇧` : `⇩`}<h1>
+            <h1> ${tag.id === "receita" ? `⇧` : `⇩`}<h1>
 
         </div>
    

@@ -1,64 +1,43 @@
-import { useNavigate } from "../../lib/@prix.js";
-
-export default function ({ tagPage, Data }) {
+export default function ({ Data }) {
   const lancamentos = Data || JSON.parse(localStorage.getItem('lancamentos')) || [];
 
+  const resultado = lancamentos.reduce((total, lancamento) => {
+    const valor = parseFloat(lancamento.VALOR);
+    if (lancamento.TIPO === "receita") {
+      total.valorTotalReceitas += valor;
+    } else if (lancamento.TIPO === "despesa") {
+      total.valorTotalDespesas += valor;
+    }
+    return total;
+  }, { valorTotalReceitas: 0, valorTotalDespesas: 0 });
 
-  const valorTotalReceitasObj = lancamentos
-  .filter(lancamento => lancamento.TIPO === "receita")
+  const { valorTotalReceitas, valorTotalDespesas } = resultado;
+  const diferenca = valorTotalReceitas - valorTotalDespesas;
 
-const valorTotalDespesasObj = lancamentos
-  .filter(lancamento => lancamento.TIPO === "despesa")
+  const tipoLancamentoAtual = location.href.split("/").pop();
 
-
-// Soma dos valores das receitas
-const valorTotalReceitas = valorTotalReceitasObj.reduce(
-  (acumulador, receita) => acumulador + parseFloat(receita.VALOR),
-  0
-);
-
-// Soma dos valores das despesas
-const valorTotalDespesas = valorTotalDespesasObj.reduce(
-  (acumulador, despesa) => acumulador + parseFloat(despesa.VALOR),
-  0
-);
-
-// Diferença entre receitas e despesas
-const diferenca = valorTotalReceitas - valorTotalDespesas;
-
-
-tagPage.addEventListener("click", e=>{
-if(e.target.tagName === "BUTTON"){
-  //lancamentos.splice(e.target.id, 1);
-  //localStorage.setItem('lancamentos', JSON.stringify(lancamentos));
-  alert("Não pode deletar")
-}
-
-//useNavigate("/#/relatorio/");
-})
-
-
-
+  const resultados = tipoLancamentoAtual !== 'receita' && tipoLancamentoAtual !== 'despesa'
+    ? lancamentos
+    : lancamentos.filter(e => e.TIPO === tipoLancamentoAtual);
 
   return `
-   
-    
-                <div class="container">
-                <h3>F-bolso</h3>                      
-                <h1>Dashboard</h1>
-                  <div class="total_valores">
-                    <h2> ${diferenca > 0  ? `<h2 style="color: green">R$ ${diferenca.toFixed(2)}</h2>` : `<h2 style="color: red">R$ -${Math.abs(diferenca).toFixed(2)}`}</h2>
-                 </div>
+    <div class="container_relatorio">
+      <h3>F-bolso</h3>
+      <h1>Dashboard</h1>
+      <div class="total_valores">
+        <h2>${diferenca > 0 ? `<h2 style="color: green">R$ ${diferenca.toFixed(2)}</h2>` : `<h2 style="color: red">R$ -${Math.abs(diferenca).toFixed(2)}`}</h2>
+      </div>
 
-                 <div class="comp-relatorios">                           
-                   ${lancamentos.map((receita, key) => `<div> <h5 style="${receita.LACAMENTO === 'receita' ? 'color: green' : 'color: red'}" >${receita.DESCRICAO} ${receita.VALOR} reais</h5>   <button id=" ${key} "></button> </div>`).join('')}
-                </div> 
-                </div>
-                                    
-      
-                      
-                 <comp-menu-mobile priority class="container_comp_menu"  id="Lançamentos"></comp-menu-mobile>
-     
-   
-`
+      <div class="comp-relatorios">
+        ${resultados.map((lancamento, index) => `
+          <div>
+            <h5 style="${lancamento.TIPO === 'receita' ? 'color: green' : 'color: red'}">${lancamento.DESCRICAO} ${lancamento.VALOR} reais</h5>
+            <button id="button_${index}">Botão ${index + 1}</button>
+          </div>`
+        ).join('')}
+      </div>
+    </div>
+
+    <comp-menu-mobile priority class="container_comp_menu"  id="Lançamentos"></comp-menu-mobile>
+  `;
 }

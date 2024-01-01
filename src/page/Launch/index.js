@@ -1,8 +1,8 @@
-import Config from "../../config.js"
+import Config from "../../../@prix_config.js"
 
 export default function Launch({ tagPage }) {
 
-  console.log(Config.keyGoogleSheetsPost)
+
   const dataFormatada = new Date().toLocaleString('pt-BR');
 
   tagPage.addEventListener("submit", (event) => {
