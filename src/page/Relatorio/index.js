@@ -32,7 +32,7 @@ export default function ({ Data }) {
         ${resultados.map((lancamento, index) => `
           <div>
             <h5 style="${lancamento.TIPO === 'receita' ? 'color: green' : 'color: red'}">${lancamento.DESCRICAO} ${lancamento.VALOR} reais</h5>
-            <button id="button_${index}">Botão ${index + 1}</button>
+            <button id="button_${index}"></button>
           </div>`
         ).join('')}
       </div>
