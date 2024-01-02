@@ -1,4 +1,4 @@
-import Config from "../../../@prix_config.js"
+import Config from "../../@prix_config.js"
 
 export default function Launch({ tagPage }) {
 
@@ -17,6 +17,7 @@ export default function Launch({ tagPage }) {
     if (tipoLancamento && valor && descricao && categoria) {
 
       const dados = {
+        id:  Math.random().toString(36).substring(2),
         dataLacamento,
         descricao,
         categoria,

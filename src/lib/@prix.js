@@ -1,5 +1,5 @@
 const root = document.querySelector("#app");
-let PagesComponentsDataArray = []
+let PagesComponentsDataArray
 let lastFetchTime = 0;
 
 const componentCache = {};
@@ -56,45 +56,11 @@ async function useNavigate(Rota, props) {
     } else {
       await Router();
     }
-  }else{
-  
+  } else {
+
     await Router(props);
   }
 }
-
-let states = {};
-const $state = (initialValue) => {
-
-  const setState = (newValue, selector) => {
-    if (states[selector] !== undefined) {
-      // Se o seletor já existir, atualiza o valor
-      states[selector] += newValue;
-    } else {
-      // Se o seletor não existir, adiciona um novo objeto
-      states[selector] = initialValue + newValue;
-    }
-    effect(selector);
-  };
-
-  const effect = (selector) => {
-    const spans = document.querySelectorAll(selector);
-    spans.forEach((span) => {
-      span.textContent = states[selector];
-    });
-  };
-
-
-  const getState = (selector) => {
-   return states[selector] === undefined ? 0 : states[selector] 
-
-  }
-
- 
-
-  return [getState, setState];
-};
-
-
 
 let urlRevalidateComponent;
 const intervalMap = new Map();
@@ -149,7 +115,7 @@ const pagesComponentsFetch = async (props) => {
   if (componentCache[componentKey]) {
     Resultcomponent = await componentCache[componentKey](Data);
   } else {
-    const url = `${location.origin}/${fetchValue}/${componentKey}.${htmljs}`;
+    const url = `${location.origin}/${fetchValue}/${componentKey}.${htmljs}`; 
     response = await fetch(url);
 
     if (!response.ok) {
@@ -161,46 +127,40 @@ const pagesComponentsFetch = async (props) => {
     }
 
     if (htmljs === "js") {
-      htmlFunction = await response.text();
-      Resultcomponent = Function("return " + htmlFunction)();
-      Resultcomponent = await retonarPaginaOcultaEmFunção(dataApp);
-      componentCache[componentKey] = retonarPaginaOcultaEmFunção;
+      htmlFunction = await response.text(); 
+      Resultcomponent = Function("return " + htmlFunction)();    
+      tag.innerHTML = Resultcomponent(Data)
+      componentCache[componentKey] = Resultcomponent;
     }
   }
 
-  return Resultcomponent;
 }
 
 const processElement = async (elem, render) => {
-  const { Components = {}, Data = {}} = PagesComponentsDataArray[0]
- 
+  const { Components = {}, Data = {} } = PagesComponentsDataArray;
+
   const elemName = elem.tagName.toLowerCase();
-  const Fetch = elem.hasAttribute("use:fetch");
+  const isFetch = elem.hasAttribute("use:fetch");
+  const revalidate = elem.hasAttribute("use:revalidate");
 
-  let componentResult = await (Fetch
+  const componentResult = await (isFetch
     ? pagesComponentsFetch({ tag: elem, Data })
-    : Components[elemName]({ tag: elem, Data }))
+    : Components[elemName]({ tag: elem, Data }));
 
-    if (elem.hasAttribute("use:revalidate") || render) {
-      elem.innerHTML = componentResult;
-      emit(elemName);
-    } else {
-      elem.innerHTML += componentResult;
-      emit(elemName);
-    }
+  elem.innerHTML = revalidate || render ? componentResult : elem.innerHTML + componentResult;
+  emit(elemName);
 
-    Array.from(elem.querySelectorAll("*")).filter(async (element) => {
+  await Promise.all(
+    Array.from(elem.querySelectorAll("*")).map(async (element) => {
       if (element.tagName.includes("-") && element.tagName.toLowerCase() !== elemName) {
-          await processElement(element);
-          reloadComp(element);
-        }      
-      });
-    
+        await processElement(element);
+        reloadComp(element);
+      }
+    })
+  );
+};
 
- 
-}
-
-async function customTags() {  
+async function customTags() {
 
   const tagElementsObserve = Array.from(document.querySelectorAll("*")).filter(
     (element) => {
@@ -220,9 +180,9 @@ async function customTags() {
   const observerTagsDom = (() => {
     const processed = new Set();
     const observer = new IntersectionObserver(async (entries, obs) => {
-      const e = entries.find((e) => e.isIntersecting);    
+      const e = entries.find((e) => e.isIntersecting);
       if (e) {
-        const { target } = e;      
+        const { target } = e;
         await processElement(target);
         reloadComp(target);
         obs.unobserve(target);
@@ -236,9 +196,8 @@ async function customTags() {
   })();
 }
 
-
 function debounce(fn, delay) {
-  let timeoutId;
+  let timeoutId; 
   return function (...args) {
     clearTimeout(timeoutId);
     timeoutId = setTimeout(() => {
@@ -247,128 +206,58 @@ function debounce(fn, delay) {
   };
 }
 
-
 const Router = async (PagesComponentsDataConfig = {}) => {
-  if (PagesComponentsDataArray.length === 0) {
-    PagesComponentsDataArray.push(PagesComponentsDataConfig);
-  } 
-  const { Pages = {}, Data = {},  Config = {} } = PagesComponentsDataArray[0] 
+    PagesComponentsDataArray = PagesComponentsDataConfig
+  const { Pages = {}, Data = {}} = PagesComponentsDataArray
 
   async function routerPages() {
-   // const checkURL = location.hash.replace("#", "") || location.pathname;
     const match = location.href.match(/#\/([^\/?]+)/);
-    const checkURL = match ? match[1] : null;
-    if (checkURL === null || checkURL === "#") {
-      return;
-    }
-    const currentPathUrl = checkURL === "/" ? Object.keys(Pages)[0]  : checkURL
+    const currentPathUrl = match ? match[1] : null;
+
+    if (!currentPathUrl || currentPathUrl === "#") return;
+
     const currentComponent = Pages[currentPathUrl] || "erro";
 
+    root.innerHTML = currentComponent === "erro"
+      ? erroPage(Pages)
+      : await Pages[currentPathUrl]({ currentPage: currentPathUrl, Data: Data, tagPage: root });
 
-    if (currentComponent === "erro") {
-      erroPage(Pages);
-    } else {
-
-      root.innerHTML = await Pages[currentPathUrl]({
-        currentPage: currentPathUrl,
-        Data: Data,
-        tagPage: root
-      });
-      emit(currentPathUrl);
-      customTags();
-    }
+    emit(currentPathUrl);
+    customTags();
   }
-  
+
   function erroPage(Pages) {
     root.innerHTML = `
       <div class="erroPages">
-        ${Object.keys(Pages)
-          .map(
-            (page, index) =>
-              `<a class="Erro" id="${index}"  use:href="/#/${page}">${page.toUpperCase()}</a>`
-          )
-          .join("")}
+        ${Object.keys(Pages).map((page, index) =>
+      `<a class="Erro" id="${index}" use:href="/#/${page}">${page.toUpperCase()}</a>`
+    ).join("")}
       </div>
     `;
   }
 
-
   function handleClick(e) {
     const href = e.target.getAttribute("use:href");
-  
     if (href) {
-      const normalizedHref = `#${href.replace(/\/+/g, "/")}`;
-      
-      // Verifica se a URL realmente mudou antes de chamar a função routerPages
+      const normalizedHref = `#${href}`;
+      console.log(normalizedHref)
       if (normalizedHref !== window.location.hash) {
         window.history.pushState(null, null, normalizedHref);
         routerPages();
       }
     }
   }
-  
+
 
   window.addEventListener("popstate", routerPages);
   document.body.addEventListener("click", debounce(handleClick, 200));
   routerPages();
 }
 
-let responseCache = []
-
-async function Fetch({ url, method, revalidate }) {
-  // Verifica se a última requisição foi feita há mais tempo que o tempo de revalidação
-
-  if (Date.now() - lastFetchTime > revalidate) {
-    return fetchAndCache(url, method);
-  } else {
-    return responseCache[url]?.data || null;
-  }
-}
-
-async function fetchAndCache(url, method) {
-
-
-  const options = {
-    method,
-    headers: {
-      "Content-Type": "application/json",
-    },
-    cache: "no-store",
-    mode: 'no-cors'
-  };
-
-
-
-  try {
-    // Realiza a solicitação
-    const response = await fetch(url, options);
-    console.log(response)
-
-    // Analisa o JSON da resposta
-    const responseData = await response.json();
-
-    
-
-
-
-
-    // Atualiza o cache com os novos dados
-    responseCache[url] = { data: responseData, timestamp: Date.now() };
-
-    // Atualiza o tempo da última requisição
-    lastFetchTime = Date.now();
-
-    // Retorna os dados buscados
-    return responseData;
-  } catch (error) {
-    console.error("Erro na solicitação:", error.message);
-    throw error; // Re-lança o erro para propagá-lo ao chamador
-  }
-}
 
 const $ = (seletor) => {
- on(seletor) 
+  on(seletor)
 }
 
 
-export { debounce, useNavigate, Router, on, emit, $state, Fetch, customTags, processElement, $ };
+export { debounce, useNavigate, Router, on, emit,  processElement, $ };

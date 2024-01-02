@@ -1,4 +1,5 @@
-export default function ({ Data }) {
+import config  from "../../@prix_config.js"
+export default function ({ tagPage, Data }) {
   const lancamentos = Data || JSON.parse(localStorage.getItem('lancamentos')) || [];
 
   const resultado = lancamentos.reduce((total, lancamento) => {
@@ -20,6 +21,23 @@ export default function ({ Data }) {
     ? lancamentos
     : lancamentos.filter(e => e.TIPO === tipoLancamentoAtual);
 
+    tagPage.addEventListener('click', e=>{
+      console.log(e.target.id);
+      const requestOptions = {
+        method: 'GET',
+    
+      mode: 'no-cors'
+      };
+      console.log()
+ 
+     fetch(`${config.keyGoogleSheetsGetExcluir}?action=delete&id=${e.target.id}`, requestOptions)
+        .then(response => response.ok ? response.json() : Promise.reject('Erro no pedido POST: ' + response.statusText))
+       .then(data => console.log("Pedido POST bem-sucedido:", data))
+        .catch(error => console.error(error));
+
+
+    })
+
   return `
     <div class="container_relatorio">
       <h3>F-bolso</h3>
@@ -32,7 +50,7 @@ export default function ({ Data }) {
         ${resultados.map((lancamento, index) => `
           <div>
             <h5 style="${lancamento.TIPO === 'receita' ? 'color: green' : 'color: red'}">${lancamento.DESCRICAO} ${lancamento.VALOR} reais</h5>
-            <button id="button_${index}"></button>
+            <button id="${lancamento.ID}"></button>
           </div>`
         ).join('')}
       </div>

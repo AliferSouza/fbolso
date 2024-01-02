@@ -16,15 +16,15 @@ export default function Dashboard({ tagPage, Data }) {
   const diferenca = valorTotalReceitas - valorTotalDespesas;
 
 
-
   return `        
-                <div class="container">
+                <div class="container">   
+              
            
-
                   <h3>F-bolso</h3>                        
                   <h1>Dashboard</h1>
                   ${diferenca > 0 ? `<h2 style="color: green">R$ ${diferenca.toFixed(2)}</h2>` : `<h2 style="color: red">R$ -${Math.abs(diferenca).toFixed(2)}`}</h2>
-                   <div class="container_corpo">           
+                   
+                  <div class="container_corpo">           
                  
                   <comp-dashboard-card style="background:#A100FFFF" class="das-card"  id="lacamentos"></comp-dashboard-card>
                   <comp-dashboard-card style="background:#279260"  class="das-card " id="receita"></comp-dashboard-card>
@@ -33,7 +33,7 @@ export default function Dashboard({ tagPage, Data }) {
                                            
              
                   </div>
-                  
+             
                   <comp-menu-mobile priority class="container_comp_menu" id="Lançamentos"></comp-menu-mobile>
             
    
